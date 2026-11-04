@@ -26,14 +26,17 @@ You can switch between companions on the fly from the Settings dialog, the syste
   - **Talk**: Expressive animated mouth and speech bubble reactions.
   - **Grabbed**: Pick up your companion by clicking and dragging anywhere on the screen.
   - **Falling**: Realistic little drop animation when released before settling back down.
+    
 - **System Senses & Dynamic Dialogue**:
   - **Music**: Detects when music players like Spotify are running.
   - **High CPU Load**: Warns you with funny remarks when your machine is working hard.
   - **Late Night Reminders**: Gently reminds you to get some sleep past midnight.
+    
 - **Broad Window Manager Compatibility**:
   - **Tiling WMs**: Uses bypass window hints so managers like i3, bspwm, dwm, and awesome never trap your companion in a tile grid.
   - **Wayland Support**: Automatic XWayland fallback ensures coordinate dragging and placement work properly on Hyprland, Sway, GNOME Wayland, and KDE Wayland.
   - **Compositing Fallback**: Includes 1-bit transparency mask clipping for lightweight X11 environments running without a compositor (e.g., bare Openbox or IceWM without picom).
+    
 - **Settings & Control**:
   - **Graphical Settings UI**: Adjust sprite scale (1x to 10x), speech cooldown, CPU sensitivity, night hours, sense polling rates, and companion skins.
   - **System Tray & Context Menu**: Full control surface available both in the tray bar and via right-click on the sprite itself for trayless setups.
