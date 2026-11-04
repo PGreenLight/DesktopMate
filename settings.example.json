@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy this to ~/.config/desktop-mate/settings.json and edit. Any key matching a CONFIG default (case-insensitive) overrides it; unknown keys are ignored.",
+
+  "SCALE": 4,
+  "CPU_THRESHOLD": 70,
+  "NIGHT_START": 23,
+  "NIGHT_END": 5,
+  "TALK_COOLDOWN_S": 8,
+  "POLL_MS": 3000
+}
