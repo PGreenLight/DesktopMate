@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QSystemTrayIcon, QMenu
 from PyQt5.QtGui import QIcon
 
 import autostart
+import config
 from settings_ui import open_settings
 
 
@@ -11,6 +12,22 @@ def build_tray(app, mate, triggers, launcher):
     tray.setToolTip("Desktop Mate")
 
     menu = QMenu()
+
+    comp_menu = menu.addMenu("Companion")
+    comp_actions = {}
+
+    def choose_companion(c):
+        mate.set_companion(c)
+        tray.setIcon(QIcon(mate.frames[0][0]))
+        for name, act in comp_actions.items():
+            act.setChecked(name == c)
+
+    for comp in config.COMPANIONS:
+        act = comp_menu.addAction(comp.capitalize())
+        act.setCheckable(True)
+        act.setChecked(config.COMPANION.lower() == comp)
+        act.triggered.connect(lambda checked, c=comp: choose_companion(c))
+        comp_actions[comp] = act
 
     pause = menu.addAction("Pause")
     pause.setCheckable(True)

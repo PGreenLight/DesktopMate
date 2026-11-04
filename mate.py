@@ -5,8 +5,7 @@ from PyQt5.QtGui import QPixmap, QPainter
 from PyQt5.QtCore import Qt, QTimer, QRect
 
 import config
-from config import (SPRITESHEET, SPRITE_SIZE, DISPLAY_SIZE,
-                    FALL_MS, REACT_MS, TALK_COOLDOWN_S)
+from config import (SPRITE_SIZE, FALL_MS, REACT_MS, TALK_COOLDOWN_S)
 from states import STATES, DEFAULT
 from dialogue import SpeechBubble, pick_line
 import autostart
@@ -53,6 +52,13 @@ class Mate(QWidget):
         if self.bubble.isVisible():
             self.bubble.reposition(self)
 
+    def set_companion(self, name):
+        config.COMPANION = name
+        config.SPRITESHEET = config.get_spritesheet(name)
+        config.save_user_settings({"COMPANION": name})
+        self.load_sheet()
+        self.update_mask_and_paint()
+
     def setup_context_menu(self, app, triggers, launcher):
         self.menu_app = app
         self.triggers = triggers
@@ -62,6 +68,13 @@ class Mate(QWidget):
         if not self.menu_app:
             return
         menu = QMenu(self)
+
+        comp_menu = menu.addMenu("Companion")
+        for comp in config.COMPANIONS:
+            act = comp_menu.addAction(comp.capitalize())
+            act.setCheckable(True)
+            act.setChecked(config.COMPANION.lower() == comp)
+            act.triggered.connect(lambda checked, c=comp: self.set_companion(c))
 
         pause_action = menu.addAction("Pause")
         pause_action.setCheckable(True)
@@ -103,11 +116,12 @@ class Mate(QWidget):
         self.timer.start(max(1, 1000 // spec["fps"]))
         self.update_mask_and_paint()
 
-    def load_sheet(self):
-        sheet = QPixmap(str(SPRITESHEET))
+    def load_sheet(self, sheet_path=None):
+        target = sheet_path or config.get_spritesheet()
+        sheet = QPixmap(str(target))
         if sheet.isNull():
             raise FileNotFoundError(
-                f"Could not load {SPRITESHEET}. Run: python3 gen_sprite.py"
+                f"Could not load {target}. Run: python3 gen_sprite.py"
             )
         rows = sheet.height() // SPRITE_SIZE
         cols = sheet.width() // SPRITE_SIZE

@@ -1,7 +1,7 @@
 import json
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
-    QSpinBox, QCheckBox, QPushButton, QLabel, QGroupBox
+    QSpinBox, QCheckBox, QPushButton, QLabel, QGroupBox, QComboBox
 )
 from PyQt5.QtCore import Qt
 
@@ -23,6 +23,14 @@ class SettingsDialog(QDialog):
 
         appearance_group = QGroupBox("Appearance")
         app_layout = QFormLayout(appearance_group)
+
+        self.companion_combo = QComboBox()
+        for comp in config.COMPANIONS:
+            self.companion_combo.addItem(comp.capitalize(), comp)
+        idx = self.companion_combo.findData(config.COMPANION.lower())
+        if idx >= 0:
+            self.companion_combo.setCurrentIndex(idx)
+        app_layout.addRow("Companion Look:", self.companion_combo)
 
         self.scale_spin = QSpinBox()
         self.scale_spin.setRange(1, 10)
@@ -90,6 +98,7 @@ class SettingsDialog(QDialog):
         main_layout.addLayout(btn_layout)
 
     def save(self):
+        new_companion = self.companion_combo.currentData()
         new_scale = self.scale_spin.value()
         new_cooldown = self.cooldown_spin.value()
         new_cpu = self.cpu_spin.value()
@@ -97,6 +106,8 @@ class SettingsDialog(QDialog):
         new_night_end = self.night_end_spin.value()
         new_poll = self.poll_spin.value()
 
+        config.COMPANION = new_companion
+        config.SPRITESHEET = config.get_spritesheet(new_companion)
         config.SCALE = new_scale
         config.DISPLAY_SIZE = config.SPRITE_SIZE * new_scale
         config.TALK_COOLDOWN_S = new_cooldown
@@ -106,6 +117,7 @@ class SettingsDialog(QDialog):
         config.POLL_MS = new_poll
 
         config.save_user_settings({
+            "COMPANION": new_companion,
             "SCALE": new_scale,
             "TALK_COOLDOWN_S": new_cooldown,
             "CPU_THRESHOLD": new_cpu,
@@ -117,6 +129,7 @@ class SettingsDialog(QDialog):
         autostart.set_enabled(self.autostart_check.isChecked())
 
         if self.mate:
+            self.mate.set_companion(new_companion)
             self.mate.apply_scale()
 
         if self.triggers:

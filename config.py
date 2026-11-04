@@ -3,10 +3,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 ASSETS = ROOT / "assets"
-SPRITESHEET = ASSETS / "spritesheet.png"
 
 CONFIG_DIR = Path.home() / ".config" / "desktop-mate"
 CONFIG_FILE = CONFIG_DIR / "settings.json"
+
+COMPANION = "cat"
+COMPANIONS = ["cat", "dog", "alien", "robot"]
 
 SPRITE_SIZE = 32
 SCALE = 4
@@ -23,6 +25,14 @@ SPOTIFY_PROC = "spotify"
 CPU_THRESHOLD = 90
 NIGHT_START = 23
 NIGHT_END = 5
+
+
+def get_spritesheet(name=None):
+    comp = str(name or COMPANION).lower()
+    p = ASSETS / f"spritesheet_{comp}.png"
+    if p.exists():
+        return p
+    return ASSETS / "spritesheet.png"
 
 
 def _load_user_settings():
@@ -53,4 +63,5 @@ def save_user_settings(settings_dict):
 
 _load_user_settings()
 
+SPRITESHEET = get_spritesheet()
 DISPLAY_SIZE = SPRITE_SIZE * SCALE
