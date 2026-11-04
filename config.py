@@ -39,6 +39,18 @@ def _load_user_settings():
             g[name] = value
 
 
+def save_user_settings(settings_dict):
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    existing = {}
+    if CONFIG_FILE.exists():
+        try:
+            existing = json.loads(CONFIG_FILE.read_text())
+        except (json.JSONDecodeError, OSError):
+            existing = {}
+    existing.update(settings_dict)
+    CONFIG_FILE.write_text(json.dumps(existing, indent=2))
+
+
 _load_user_settings()
 
 DISPLAY_SIZE = SPRITE_SIZE * SCALE

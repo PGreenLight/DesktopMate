@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QSystemTrayIcon, QMenu
 from PyQt5.QtGui import QIcon
 
 import autostart
+from settings_ui import open_settings
 
 
 def build_tray(app, mate, triggers, launcher):
@@ -27,6 +28,9 @@ def build_tray(app, mate, triggers, launcher):
     boot.setCheckable(True)
     boot.setChecked(autostart.is_enabled())
     boot.toggled.connect(autostart.set_enabled)
+
+    settings_item = menu.addAction("Settings...")
+    settings_item.triggered.connect(lambda: open_settings(mate=mate, triggers=triggers))
 
     menu.addSeparator()
     quit_item = menu.addAction("Quit")

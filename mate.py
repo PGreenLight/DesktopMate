@@ -4,11 +4,13 @@ from PyQt5.QtWidgets import QWidget, QApplication, QMenu
 from PyQt5.QtGui import QPixmap, QPainter
 from PyQt5.QtCore import Qt, QTimer, QRect
 
+import config
 from config import (SPRITESHEET, SPRITE_SIZE, DISPLAY_SIZE,
                     FALL_MS, REACT_MS, TALK_COOLDOWN_S)
 from states import STATES, DEFAULT
 from dialogue import SpeechBubble, pick_line
 import autostart
+from settings_ui import open_settings
 
 
 class Mate(QWidget):
@@ -22,7 +24,7 @@ class Mate(QWidget):
             | Qt.X11BypassWindowManagerHint
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setFixedSize(DISPLAY_SIZE, DISPLAY_SIZE)
+        self.setFixedSize(config.DISPLAY_SIZE, config.DISPLAY_SIZE)
         self.setFocusPolicy(Qt.StrongFocus)
 
         self.frames = []
@@ -44,6 +46,12 @@ class Mate(QWidget):
         self.paused = False
 
         self.move(600, 600)
+
+    def apply_scale(self):
+        self.setFixedSize(config.DISPLAY_SIZE, config.DISPLAY_SIZE)
+        self.update_mask_and_paint()
+        if self.bubble.isVisible():
+            self.bubble.reposition(self)
 
     def setup_context_menu(self, app, triggers, launcher):
         self.menu_app = app
@@ -75,6 +83,9 @@ class Mate(QWidget):
         boot_action.setCheckable(True)
         boot_action.setChecked(autostart.is_enabled())
         boot_action.toggled.connect(autostart.set_enabled)
+
+        settings_action = menu.addAction("Settings...")
+        settings_action.triggered.connect(lambda: open_settings(mate=self, triggers=self.triggers))
 
         menu.addSeparator()
         quit_action = menu.addAction("Quit")
@@ -123,7 +134,7 @@ class Mate(QWidget):
 
     def update_mask_and_paint(self):
         pixmap = self.frames[self.row][self.frame]
-        scaled = pixmap.scaled(DISPLAY_SIZE, DISPLAY_SIZE, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+        scaled = pixmap.scaled(config.DISPLAY_SIZE, config.DISPLAY_SIZE, Qt.IgnoreAspectRatio, Qt.FastTransformation)
         self.setMask(scaled.mask())
         self.update()
 
@@ -168,7 +179,7 @@ class Mate(QWidget):
 
     def say(self, event):
         now = time.monotonic()
-        if now - self._last_spoke < TALK_COOLDOWN_S:
+        if now - self._last_spoke < config.TALK_COOLDOWN_S:
             return
         line = pick_line(event)
         if line is None:
@@ -193,6 +204,6 @@ class Mate(QWidget):
         pixmap = self.frames[self.row][self.frame]
         painter = QPainter(self)
         painter.setRenderHint(QPainter.SmoothPixmapTransform, False)
-        target = QRect(0, 0, DISPLAY_SIZE, DISPLAY_SIZE)
+        target = QRect(0, 0, config.DISPLAY_SIZE, config.DISPLAY_SIZE)
         source = QRect(0, 0, SPRITE_SIZE, SPRITE_SIZE)
         painter.drawPixmap(target, pixmap, source)

@@ -7,7 +7,7 @@ A customizable, lightweight desktop companion built with Python and PyQt5.
 - **Cross-WM Compatibility**: Runs seamlessly on X11 (floating & tiling like i3, bspwm, dwm) and Wayland (via XWayland).
 - **Interactive Animations**: Idle breathing, talking, dragging (grabbed), and falling reactions.
 - **Senses & Triggers**: Reacts to system load, time of day, and music playback.
-- **Control**: System tray icon with toggleable pause, autostart on login, and direct on-sprite right-click context menu fallback.
+- **Control & Settings UI**: Interactive Settings dialog accessible from the system tray or right-click menu, toggleable pause, and autostart on login.
 
 ## Requirements
 
