@@ -6,6 +6,17 @@ if "QT_QPA_PLATFORM" not in os.environ and (
 ):
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
+from PyQt5.QtCore import qInstallMessageHandler
+
+
+def _filter_qt_messages(mode, context, message):
+    if "QFont::fromString" in message:
+        return
+    sys.stderr.write(message + "\n")
+
+
+qInstallMessageHandler(_filter_qt_messages)
+
 from PyQt5.QtWidgets import QApplication, QSystemTrayIcon
 
 from mate import Mate

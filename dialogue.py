@@ -259,6 +259,9 @@ class SpeechBubble(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
 
+        self.font = QFont("sans-serif", 10)
+        self.setFont(self.font)
+
         self.text = ""
         self._hide_timer = QTimer(self)
         self._hide_timer.setSingleShot(True)
@@ -271,14 +274,13 @@ class SpeechBubble(QWidget):
 
     def show_text(self, text, anchor):
         self.text = text
-        font = QFont("Sans-Serif", 10)
         fm = self.fontMetrics()
-        lines = text.split("\n")
-        max_w = min(220, max(fm.horizontalAdvance(line) for line in lines) + 24)
-        rect = fm.boundingRect(0, 0, max_w - 20, 1000, Qt.TextWordWrap, text)
-        w = max(90, rect.width() + 24)
-        h = max(38, rect.height() + 22)
-        self.setFixedSize(w, h + 8)
+        raw_w = fm.horizontalAdvance(text)
+        wrap_w = min(260, max(130, raw_w))
+        rect = fm.boundingRect(0, 0, wrap_w, 2000, Qt.TextWordWrap, text)
+        w = max(110, rect.width() + 32)
+        h = max(42, rect.height() + 24)
+        self.setFixedSize(w, h + 9)
 
         self.reposition(anchor)
         self.show()
@@ -293,7 +295,7 @@ class SpeechBubble(QWidget):
         painter.setRenderHint(QPainter.Antialiasing, True)
 
         w = self.width()
-        h = self.height() - 8
+        h = self.height() - 9
 
         body_rect = QRectF(1.5, 1.5, w - 3, h - 3)
 
@@ -308,17 +310,16 @@ class SpeechBubble(QWidget):
         tail = QPolygon([
             QPoint(int(cx - 6), int(h - 1)),
             QPoint(int(cx + 6), int(h - 1)),
-            QPoint(int(cx), int(h + 7)),
+            QPoint(int(cx), int(h + 8)),
         ])
         painter.setPen(Qt.NoPen)
         painter.drawPolygon(tail)
 
         painter.setPen(QPen(border_color, 2))
-        painter.drawLine(int(cx - 6), int(h - 1), int(cx), int(h + 7))
-        painter.drawLine(int(cx + 6), int(h - 1), int(cx), int(h + 7))
+        painter.drawLine(int(cx - 6), int(h - 1), int(cx), int(h + 8))
+        painter.drawLine(int(cx + 6), int(h - 1), int(cx), int(h + 8))
 
         painter.setPen(QPen(QColor(40, 38, 55)))
-        font = QFont("Sans-Serif", 10)
-        painter.setFont(font)
-        text_rect = QRectF(10, 6, w - 20, h - 12)
+        painter.setFont(self.font)
+        text_rect = QRectF(14, 10, w - 28, h - 18)
         painter.drawText(text_rect, Qt.AlignCenter | Qt.TextWordWrap, self.text)
