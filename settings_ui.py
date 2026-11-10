@@ -17,7 +17,7 @@ class SettingsDialog(QDialog):
 
         self.setWindowTitle("Desktop Mate Settings")
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setMinimumWidth(320)
+        self.setMinimumWidth(340)
 
         main_layout = QVBoxLayout(self)
 
@@ -41,6 +41,14 @@ class SettingsDialog(QDialog):
 
         behavior_group = QGroupBox("Behavior & Senses")
         beh_layout = QFormLayout(behavior_group)
+
+        self.wander_check = QCheckBox("Autonomous Wandering")
+        self.wander_check.setChecked(config.ALLOW_WANDER)
+        beh_layout.addRow("Movement:", self.wander_check)
+
+        self.sleep_check = QCheckBox("Nap When Idle")
+        self.sleep_check.setChecked(config.ALLOW_SLEEP)
+        beh_layout.addRow("Sleep:", self.sleep_check)
 
         self.cooldown_spin = QSpinBox()
         self.cooldown_spin.setRange(1, 120)
@@ -105,6 +113,8 @@ class SettingsDialog(QDialog):
         new_night_start = self.night_start_spin.value()
         new_night_end = self.night_end_spin.value()
         new_poll = self.poll_spin.value()
+        new_wander = self.wander_check.isChecked()
+        new_sleep = self.sleep_check.isChecked()
 
         config.COMPANION = new_companion
         config.SPRITESHEET = config.get_spritesheet(new_companion)
@@ -115,6 +125,8 @@ class SettingsDialog(QDialog):
         config.NIGHT_START = new_night_start
         config.NIGHT_END = new_night_end
         config.POLL_MS = new_poll
+        config.ALLOW_WANDER = new_wander
+        config.ALLOW_SLEEP = new_sleep
 
         config.save_user_settings({
             "COMPANION": new_companion,
@@ -124,6 +136,8 @@ class SettingsDialog(QDialog):
             "NIGHT_START": new_night_start,
             "NIGHT_END": new_night_end,
             "POLL_MS": new_poll,
+            "ALLOW_WANDER": new_wander,
+            "ALLOW_SLEEP": new_sleep,
         })
 
         autostart.set_enabled(self.autostart_check.isChecked())

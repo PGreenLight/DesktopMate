@@ -26,6 +26,10 @@ CPU_THRESHOLD = 90
 NIGHT_START = 23
 NIGHT_END = 5
 
+ALLOW_WANDER = True
+ALLOW_SLEEP = True
+SLEEP_IDLE_S = 60
+
 
 def get_spritesheet(name=None):
     comp = str(name or COMPANION).lower()

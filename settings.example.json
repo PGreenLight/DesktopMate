@@ -1,6 +1,8 @@
 {
   "COMPANION": "cat",
   "SCALE": 4,
+  "ALLOW_WANDER": true,
+  "ALLOW_SLEEP": true,
   "CPU_THRESHOLD": 70,
   "NIGHT_START": 23,
   "NIGHT_END": 5,

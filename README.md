@@ -8,12 +8,12 @@ Built with Python and PyQt5, DesktopMate runs seamlessly across both floating an
 
 ## Companions
 
-DesktopMate includes four built-in animated companions with unique pixel-art spritesheets:
+DesktopMate includes four built-in animated companions with unique pixel-art spritesheets and distinct personality dialogues:
 
-- **Cat** (Default): An adorable cream kitten with twitching ears, a red collar with a golden bell, sparkling eyes, and a swishing tail.
-- **Dog**: A playful caramel puppy with bouncy floppy ears, wagging tail, and happy panting expressions.
-- **Alien**: A cosmic visitor with an extraterrestrial spacesuit, starry eyes, and a glowing, pulsating antenna.
-- **Robot**: A retro-futuristic metallic bot featuring animated cyan visor matrix eyes, dials, and rocket thruster sparks.
+- **Cat** (Default): An adorable cream kitten with twitching ears, red collar with a golden bell, sparkling eyes, and a swishing tail. Likes sleeping, purrs when petted, and offers sassy remarks.
+- **Dog**: A playful caramel puppy with bouncy floppy ears, wagging tail, and happy panting expressions. Loves music, brings endless energy, and gives encouraging cheers.
+- **Alien**: A cosmic visitor with an extraterrestrial spacesuit, starry eyes, and a glowing, pulsating antenna. Analyzes your terrestrial habits and monitors thermal emissions.
+- **Robot**: A retro-futuristic metallic bot featuring animated cyan visor matrix eyes, dials, and rocket thruster sparks. Provides technical diagnostics and system load status.
 
 You can switch between companions on the fly from the Settings dialog, the system tray, or the on-sprite right-click menu.
 
@@ -22,23 +22,24 @@ You can switch between companions on the fly from the Settings dialog, the syste
 ## Features
 
 - **Interactive Physics & Animations**:
-  - **Idle**: Gentle breathing, blinking, and tail/antenna movement.
-  - **Talk**: Expressive animated mouth and speech bubble reactions.
-  - **Grabbed**: Pick up your companion by clicking and dragging anywhere on the screen.
-  - **Falling**: Realistic little drop animation when released before settling back down.
-    
+  - **Petting**: Rapidly move the cursor back and forth over your companion to pet them and trigger happy purrs, tail wags, and heart reactions!
+  - **Fling & Toss Physics**: Pick up your companion and throw them across the screen! They fly with momentum, bounce off display edges, and land gracefully.
+  - **Autonomous Wandering**: Companions occasionally take walks around your screen, stop, and look around.
+  - **Idle Napping**: When your system sits idle for a while, your companion curls up and takes a peaceful nap until you wake them.
+  - **Drag & Drop**: Click and hold anywhere on the companion to reposition them.
+  - **Falling**: Smooth drop physics and startled expressions when released mid-air.
 - **System Senses & Dynamic Dialogue**:
-  - **Music**: Detects when music players like Spotify are running.
-  - **High CPU Load**: Warns you with funny remarks when your machine is working hard.
-  - **Late Night Reminders**: Gently reminds you to get some sleep past midnight.
-    
+  - **Music**: Detects active music players like Spotify and reacts to your tunes.
+  - **High CPU Load**: Warns you with companion-specific remarks when your machine is working hard.
+  - **Battery & Power**: Alerts you when your laptop battery drops low (< 20%) and celebrates when plugged into power.
+  - **Late Night Reminders**: Gently nudges you to get some sleep past midnight.
+  - **Idle Thoughts**: Shares cute random thoughts and observations during quiet periods.
 - **Broad Window Manager Compatibility**:
   - **Tiling WMs**: Uses bypass window hints so managers like i3, bspwm, dwm, and awesome never trap your companion in a tile grid.
-  - **Wayland Support**: Automatic XWayland fallback ensures coordinate dragging and placement work properly on Hyprland, Sway, GNOME Wayland, and KDE Wayland.
+  - **Wayland Support**: Automatic XWayland fallback ensures coordinate dragging, tossing, and placement work properly on Hyprland, Sway, GNOME Wayland, and KDE Wayland.
   - **Compositing Fallback**: Includes 1-bit transparency mask clipping for lightweight X11 environments running without a compositor (e.g., bare Openbox or IceWM without picom).
-    
 - **Settings & Control**:
-  - **Graphical Settings UI**: Adjust sprite scale (1x to 10x), speech cooldown, CPU sensitivity, night hours, sense polling rates, and companion skins.
+  - **Graphical Settings UI**: Adjust sprite scale (1x to 10x), autonomous wandering, idle sleep, speech cooldown, CPU sensitivity, night hours, sense polling rates, and companion skins.
   - **System Tray & Context Menu**: Full control surface available both in the tray bar and via right-click on the sprite itself for trayless setups.
   - **Start on Login**: One-click autostart configuration for standard desktop environments.
 
@@ -83,7 +84,10 @@ pip install PyQt5 Pillow psutil
 
 | Action | Control |
 | :--- | :--- |
+| **Pet** | Move cursor rapidly left and right over the companion |
 | **Drag & Move** | Left-click and hold anywhere on the companion |
+| **Throw / Toss** | Drag and quickly release with speed to fling across the screen |
+| **Wake Up** | Click, pet, or drag a sleeping companion |
 | **Open Menu** | Right-click the companion or system tray icon |
 | **Settings** | Select **Settings...** in the context menu or tray |
 | **Switch Companion** | Open **Companion** submenu in the tray or right-click menu |
@@ -103,6 +107,8 @@ Example configuration file:
 {
   "COMPANION": "cat",
   "SCALE": 4,
+  "ALLOW_WANDER": true,
+  "ALLOW_SLEEP": true,
   "CPU_THRESHOLD": 85,
   "NIGHT_START": 23,
   "NIGHT_END": 5,
@@ -116,5 +122,5 @@ Example configuration file:
 ## Customization
 
 - **Sprites**: Add or replace spritesheets in the `assets/` folder (`32x32` pixels per cell).
-- **Lines**: Edit or add phrases in `dialogue.py` under the `LINES` dictionary.
+- **Lines**: Edit or add phrases in `dialogue.py` under the `COMPANION_LINES` dictionary.
 - **Senses**: Add new system monitoring hooks in `triggers.py`.
