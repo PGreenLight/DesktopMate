@@ -41,6 +41,7 @@ You can switch between companions on the fly from the Settings dialog, the syste
 - **Settings & Control**:
   - **Graphical Settings UI**: Adjust sprite scale (1x to 10x), autonomous wandering, idle sleep, speech cooldown, CPU sensitivity, night hours, sense polling rates, and companion skins.
   - **System Tray & Context Menu**: Full control surface available both in the tray bar and via right-click on the sprite itself for trayless setups.
+  - **One-Click Updates**: Built-in update checker in Settings and tray menus pulls the latest changes from GitHub and offers an instant restart.
   - **Start on Login**: One-click autostart configuration for standard desktop environments.
 
 ---
@@ -90,6 +91,7 @@ pip install PyQt5 Pillow psutil
 | **Wake Up** | Click, pet, or drag a sleeping companion |
 | **Open Menu** | Right-click the companion or system tray icon |
 | **Settings** | Select **Settings...** in the context menu or tray |
+| **Check for Updates** | Select **Check for Updates...** in the menu or Settings dialog |
 | **Switch Companion** | Open **Companion** submenu in the tray or right-click menu |
 | **Pause Animations/Senses** | Toggle **Pause** in the menu |
 | **Quit** | Click **Quit** in the menu, or focus the window and press `Q` |

@@ -49,6 +49,9 @@ def build_tray(app, mate, triggers, launcher):
     settings_item = menu.addAction("Settings...")
     settings_item.triggered.connect(lambda: open_settings(mate=mate, triggers=triggers))
 
+    update_item = menu.addAction("Check for Updates...")
+    update_item.triggered.connect(lambda: open_settings(mate=mate, triggers=triggers, check_updates=True))
+
     menu.addSeparator()
     quit_item = menu.addAction("Quit")
     quit_item.triggered.connect(app.quit)

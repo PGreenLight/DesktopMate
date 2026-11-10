@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 
 import config
 import autostart
+from updater import UpdateWorker, restart_app
 
 
 class SettingsDialog(QDialog):
@@ -14,6 +15,7 @@ class SettingsDialog(QDialog):
         super().__init__(parent)
         self.mate = mate
         self.triggers = triggers
+        self._worker = None
 
         self.setWindowTitle("Desktop Mate Settings")
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -83,11 +85,28 @@ class SettingsDialog(QDialog):
 
         main_layout.addWidget(behavior_group)
 
-        system_group = QGroupBox("System")
+        system_group = QGroupBox("System & Updates")
         sys_layout = QVBoxLayout(system_group)
+
         self.autostart_check = QCheckBox("Start on login")
         self.autostart_check.setChecked(autostart.is_enabled())
         sys_layout.addWidget(self.autostart_check)
+
+        update_row = QHBoxLayout()
+        self.update_btn = QPushButton("Check for Updates")
+        self.update_btn.clicked.connect(self._check_updates)
+        update_row.addWidget(self.update_btn)
+
+        self.restart_btn = QPushButton("Restart Now")
+        self.restart_btn.setVisible(False)
+        self.restart_btn.clicked.connect(restart_app)
+        update_row.addWidget(self.restart_btn)
+
+        sys_layout.addLayout(update_row)
+
+        self.update_status = QLabel("")
+        self.update_status.setWordWrap(True)
+        sys_layout.addWidget(self.update_status)
 
         main_layout.addWidget(system_group)
 
@@ -104,6 +123,29 @@ class SettingsDialog(QDialog):
         btn_layout.addWidget(self.cancel_btn)
 
         main_layout.addLayout(btn_layout)
+
+    def _check_updates(self):
+        self.update_btn.setEnabled(False)
+        self.update_btn.setText("Checking...")
+        self.update_status.setStyleSheet("color: #666;")
+        self.update_status.setText("Checking remote repository for updates...")
+        self.restart_btn.setVisible(False)
+
+        self._worker = UpdateWorker(self)
+        self._worker.finished.connect(self._on_update_finished)
+        self._worker.start()
+
+    def _on_update_finished(self, success, has_updated, msg):
+        self.update_btn.setEnabled(True)
+        self.update_btn.setText("Check for Updates")
+        if success:
+            color = "#28a745" if not has_updated else "#0066cc"
+            self.update_status.setStyleSheet(f"color: {color}; font-weight: bold;")
+            if has_updated:
+                self.restart_btn.setVisible(True)
+        else:
+            self.update_status.setStyleSheet("color: #dc3545;")
+        self.update_status.setText(msg)
 
     def save(self):
         new_companion = self.companion_combo.currentData()
@@ -155,7 +197,7 @@ class SettingsDialog(QDialog):
 _settings_instance = None
 
 
-def open_settings(mate=None, triggers=None):
+def open_settings(mate=None, triggers=None, check_updates=False):
     global _settings_instance
     if _settings_instance is None or not _settings_instance.isVisible():
         _settings_instance = SettingsDialog(mate=mate, triggers=triggers)
@@ -163,3 +205,6 @@ def open_settings(mate=None, triggers=None):
     else:
         _settings_instance.activateWindow()
         _settings_instance.raise_()
+
+    if check_updates and _settings_instance:
+        _settings_instance._check_updates()

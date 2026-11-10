@@ -122,6 +122,9 @@ class Mate(QWidget):
         settings_action = menu.addAction("Settings...")
         settings_action.triggered.connect(lambda: open_settings(mate=self, triggers=self.triggers))
 
+        update_action = menu.addAction("Check for Updates...")
+        update_action.triggered.connect(lambda: open_settings(mate=self, triggers=self.triggers, check_updates=True))
+
         menu.addSeparator()
         quit_action = menu.addAction("Quit")
         quit_action.triggered.connect(self.menu_app.quit)
